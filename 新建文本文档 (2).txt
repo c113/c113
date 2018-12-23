@@ -1,0 +1,55 @@
+int value = 0;
+int inputPin=4;  // 定义超声波信号接收接口ECHO
+int outputPin=5; // 定义超声波信号发出接口TRIG
+int music=13;
+float cm;
+void setup()
+{
+  Serial.begin(9600);//定义串口波特率
+  pinMode(inputPin, INPUT);//定义与超声波传感器探头联接的脚的输入输出模式
+  pinMode(outputPin, OUTPUT);
+  pinMode(music,OUTPUT);
+  delay(500);
+}
+void loop()
+{
+  digitalWrite(outputPin, LOW); // 使发出发出超声波信号接口低电平2μs
+  delayMicroseconds(2);
+  digitalWrite(outputPin, HIGH); // 使发出发出超声波信号接口高电平10μs  
+  delayMicroseconds(10);
+  digitalWrite(outputPin, LOW);    // 保持发出超声波信号接口低电平
+  int distance = pulseIn(inputPin, HIGH);  // 读出脉冲时间
+  distance= distance/58;   // 用公式将脉冲时间转化为距离（单位为厘米）
+  //Serial.println(distance);   //输出距离数值,测试用                 
+  int value=map(distance,1,30,1,8);//数值转换
+ 
+  if(value<=1)  
+{
+tone(13,220);    //声音函数（端口,频率）
+}
+if(value>1&&value<=3)
+{
+tone(13,880); 
+}
+if(value>3&&value<=7)
+{
+tone(13,440); 
+}
+  if (value <=1)
+ {
+Serial.println("优秀，你也tql8");
+ }
+if (value>1&&value<=3)
+ {
+Serial.println("良好，身体棒棒哒(　＾?＾)");
+ }
+ if (value>3&&value<=7)
+ {
+Serial.println("嘤嘤嘤，小哥哥再做一个叭");
+ }
+ int fm=map(distance,1,30,40,5000);
+  digitalWrite(music,HIGH);
+  delayMicroseconds(fm);
+  digitalWrite(music,LOW);
+  delayMicroseconds(fm);
+}
